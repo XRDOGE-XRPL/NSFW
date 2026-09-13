@@ -67,7 +67,8 @@ fun TokensScreen(
                                     Text("Aktiver Tier")
                                 }
                             } else {
-                                OutlinedButton(onClick = { onSelectTier(tier.id) }, modifier = Modifier.fillMaxWidth()) {
+                                InfoPill("Bereit", modifier = Modifier.weight(1f))
+                                OutlinedButton(onClick = { onSelectTier(tier.id) }, modifier = Modifier.weight(1f)) {
                                     Text("Als aktiven Tier setzen")
                                 }
                             }
