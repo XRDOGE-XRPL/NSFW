@@ -61,7 +61,7 @@ fun ExplorerScreen(
                     KeyValue("Nische", creator.niche)
                     KeyValue("Subscriber", creator.monthlySubscribers.toString())
                     KeyValue("Status", creator.verification)
-                    Button(onClick = { onCreatorInterest(creator.name) }, modifier = Modifier.fillMaxWidth()) {
+                    Button(onClick = { onCreatorInterest(creator.id) }, modifier = Modifier.fillMaxWidth()) {
                         Text("Kontakt vorbereiten")
                     }
                 }

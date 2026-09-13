@@ -97,8 +97,9 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun registerCreatorInterest(name: String) {
-        _state.update { it.copy(notice = "Kontaktanfrage an $name vorbereitet") }
+    fun registerCreatorInterest(creatorId: String) {
+        val creatorName = _state.value.creators.firstOrNull { it.id == creatorId }?.name ?: creatorId
+        _state.update { it.copy(notice = "Kontaktanfrage an $creatorName vorbereitet") }
     }
 
     private fun sampleCreators() = listOf(
