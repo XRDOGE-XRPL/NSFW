@@ -92,7 +92,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("explorer") {
                             ExplorerScreen(
-                                state = state,
+                                query = state.query,
                                 creators = vm.filteredCreators(),
                                 onQueryChange = vm::onQueryChange,
                                 onCreatorInterest = vm::registerCreatorInterest,

@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.xrdoge.nsfw.data.CreatorProfile
-import com.xrdoge.nsfw.ui.UiState
 import com.xrdoge.nsfw.ui.components.KeyValue
 import com.xrdoge.nsfw.ui.components.NeonCard
 import com.xrdoge.nsfw.ui.components.SectionLabel
@@ -22,7 +21,7 @@ import com.xrdoge.nsfw.ui.theme.Mist
 
 @Composable
 fun ExplorerScreen(
-    state: UiState,
+    query: String,
     creators: List<CreatorProfile>,
     onQueryChange: (String) -> Unit,
     onCreatorInterest: (String) -> Unit,
@@ -39,7 +38,7 @@ fun ExplorerScreen(
         }
         item {
             OutlinedTextField(
-                value = state.query,
+                value = query,
                 onValueChange = onQueryChange,
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,

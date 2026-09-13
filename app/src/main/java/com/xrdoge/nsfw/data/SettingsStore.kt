@@ -29,17 +29,18 @@ class SettingsStore(private val context: Context) {
 
     suspend fun migrateLegacySettings() {
         context.dataStore.edit { prefs ->
+            val defaults = AppSettings()
             if (prefs[CREATOR_ALIAS].isNullOrBlank()) {
-                prefs[CREATOR_ALIAS] = "Creatorin"
+                prefs[CREATOR_ALIAS] = defaults.creatorAlias
             }
             if (prefs[PLATFORM_MODE].isNullOrBlank()) {
-                prefs[PLATFORM_MODE] = "Adult Plattform"
+                prefs[PLATFORM_MODE] = defaults.platformMode
             }
             if (prefs[ALLOW_DIRECT_MESSAGES] == null) {
-                prefs[ALLOW_DIRECT_MESSAGES] = true
+                prefs[ALLOW_DIRECT_MESSAGES] = defaults.allowDirectMessages
             }
             if (prefs[SHOW_EXPLICIT_PREVIEW] == null) {
-                prefs[SHOW_EXPLICIT_PREVIEW] = false
+                prefs[SHOW_EXPLICIT_PREVIEW] = defaults.showExplicitPreview
             }
             clearLegacyKeys(prefs)
         }
