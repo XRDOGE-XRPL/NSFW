@@ -86,11 +86,12 @@ fun HomeScreen(
             KeyValue("Aktiver Tier", activeSubscription?.name ?: "Kein Tier")
             activeSubscription?.let { tier ->
                 Text(tier.tagline, color = Mist)
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                InfoPill("Story Mode")
-                InfoPill("Voice Intro")
-            }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                    tier.highlights.take(2).forEach { highlight ->
+                        InfoPill(highlight)
+                    }
+                }
+            } ?: Text("Wähle im Content-Bereich ein Subscription-Tier für passende Unlocks.", color = Mist)
         }
 
         NeonCard {

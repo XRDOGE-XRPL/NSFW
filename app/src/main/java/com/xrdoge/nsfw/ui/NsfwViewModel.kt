@@ -153,7 +153,7 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
             store.update { current ->
                 current.copy(activeSubscriptionTierId = tierId)
             }
-            _state.update { it.copy(notice = "${tier.name} aktiviert") }
+            _state.update { it.copy(error = null, notice = "${tier.name} aktiviert") }
         }
     }
 
@@ -206,6 +206,7 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
         _state.update {
             it.copy(
                 drafts = it.drafts.filterNot { draft -> draft.creatorId == creatorId },
+                error = null,
                 notice = "Entwurf für $creatorName entfernt",
             )
         }
