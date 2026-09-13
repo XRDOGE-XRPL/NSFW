@@ -112,12 +112,16 @@ fun HomeScreen(
             if (drafts.isEmpty()) {
                 Text("Lege im Creator Hub direkte Story- oder Voice-Intro-Anfragen an.", color = Mist)
             } else {
-                drafts.forEach { draft ->
-                    Text(draft.creatorName, color = NeonPink)
-                    Text(draft.opener, color = Mist)
-                    KeyValue("Status", draft.status)
-                    OutlinedButton(onClick = { onDismissDraft(draft.creatorId) }, modifier = Modifier.fillMaxWidth()) {
-                        Text("Entwurf entfernen")
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    drafts.forEach { draft ->
+                        NeonCard {
+                            Text(draft.creatorName, color = NeonPink)
+                            Text(draft.opener, color = Mist)
+                            KeyValue("Status", draft.status)
+                            OutlinedButton(onClick = { onDismissDraft(draft.creatorId) }, modifier = Modifier.fillMaxWidth()) {
+                                Text("Entwurf entfernen")
+                            }
+                        }
                     }
                 }
             }

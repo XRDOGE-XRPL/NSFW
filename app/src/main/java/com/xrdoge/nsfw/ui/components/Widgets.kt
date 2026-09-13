@@ -81,14 +81,19 @@ fun SectionLabel(text: String) {
 }
 
 @Composable
-fun InfoPill(text: String, modifier: Modifier = Modifier, color: Color = NeonPink) {
+fun InfoPill(
+    text: String,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = CardStroke,
+    contentColor: Color = Color.White,
+) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(999.dp))
-            .background(color.copy(alpha = 0.18f))
-            .border(1.dp, color.copy(alpha = 0.35f), RoundedCornerShape(999.dp))
+            .background(backgroundColor)
+            .border(1.dp, contentColor.copy(alpha = 0.35f), RoundedCornerShape(999.dp))
             .padding(horizontal = 10.dp, vertical = 6.dp),
     ) {
-        Text(text, style = MaterialTheme.typography.labelMedium, color = color)
+        Text(text, style = MaterialTheme.typography.labelMedium, color = contentColor)
     }
 }

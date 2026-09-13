@@ -34,6 +34,8 @@ fun ExplorerScreen(
     onCreatorInterest: (String) -> Unit,
     onToggleFavorite: (String) -> Unit,
 ) {
+    val draftCounts = drafts.groupingBy { it.creatorId }.eachCount()
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -64,7 +66,7 @@ fun ExplorerScreen(
         } else {
             items(creators, key = { it.id }) { creator ->
                 val isFavorite = creator.id in favoriteCreatorIds
-                val draftCount = drafts.count { it.creatorId == creator.id }
+                val draftCount = draftCounts[creator.id] ?: 0
                 NeonCard {
                     SectionLabel(creator.name)
                     Text("${creator.niche} • ${creator.chemistryTags.joinToString(" • ")}", color = Mist)

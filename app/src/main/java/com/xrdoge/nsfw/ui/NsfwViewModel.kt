@@ -113,10 +113,6 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
         return _state.value.subscriptions.firstOrNull { it.id == activeId }
     }
 
-    fun draftCountForCreator(creatorId: String): Int {
-        return _state.value.drafts.count { it.creatorId == creatorId }
-    }
-
     fun toggleFavoriteCreator(creatorId: String) {
         val creator = _state.value.creators.firstOrNull { it.id == creatorId }
         if (creator == null) {
@@ -125,17 +121,15 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
         }
         viewModelScope.launch {
             val isFavorite = creatorId in _state.value.settings.favoriteCreatorIds
+            val nextFavorites = _state.value.settings.favoriteCreatorIds.toMutableSet().apply {
+                if (isFavorite) remove(creatorId) else add(creatorId)
+            }.toSet()
             store.update { current ->
-                val favorites = current.favoriteCreatorIds.toMutableSet()
-                if (isFavorite) {
-                    favorites.remove(creatorId)
-                } else {
-                    favorites.add(creatorId)
-                }
-                current.copy(favoriteCreatorIds = favorites.toSet())
+                current.copy(favoriteCreatorIds = nextFavorites)
             }
             _state.update {
                 it.copy(
+                    settings = it.settings.copy(favoriteCreatorIds = nextFavorites),
                     error = null,
                     notice = if (isFavorite) "${creator.name} aus Favoriten entfernt" else "${creator.name} als Favoritin gespeichert",
                 )
@@ -153,7 +147,13 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
             store.update { current ->
                 current.copy(activeSubscriptionTierId = tierId)
             }
-            _state.update { it.copy(error = null, notice = "${tier.name} aktiviert") }
+            _state.update {
+                it.copy(
+                    settings = it.settings.copy(activeSubscriptionTierId = tierId),
+                    error = null,
+                    notice = "${tier.name} aktiviert",
+                )
+            }
         }
     }
 
