@@ -81,7 +81,7 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text("Direktnachrichten erlauben")
-                Switch(checked = allowDm, onCheckedChange = { allowDm = it })
+                Switch(checked = allowDm, onCheckedChange = null)
             }
             Row(
                 modifier = Modifier
@@ -95,7 +95,7 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text("Explizite Preview anzeigen")
-                Switch(checked = showPreview, onCheckedChange = { showPreview = it })
+                Switch(checked = showPreview, onCheckedChange = null)
             }
         }
 
