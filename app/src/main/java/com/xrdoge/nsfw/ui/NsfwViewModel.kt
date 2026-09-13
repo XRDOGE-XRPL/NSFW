@@ -49,13 +49,13 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun refreshPlatform() {
-        _state.update { it.copy(loading = true, error = null) }
         _state.update {
             it.copy(
                 creators = sampleCreators(),
                 feed = samplePosts(),
                 subscriptions = sampleSubscriptions(),
                 loading = false,
+                error = null,
             )
         }
     }
