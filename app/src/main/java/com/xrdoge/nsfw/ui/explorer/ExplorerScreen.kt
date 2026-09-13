@@ -78,7 +78,7 @@ fun ExplorerScreen(
                         }
                         InfoPill("Story Mode")
                         if (draftCount > 0) {
-                            InfoPill("$draftCount Draft")
+                            InfoPill("$draftCount ${if (draftCount == 1) "Draft" else "Drafts"}")
                         }
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {

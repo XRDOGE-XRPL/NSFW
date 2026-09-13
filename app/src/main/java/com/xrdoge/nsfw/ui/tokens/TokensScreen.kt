@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -68,11 +67,8 @@ fun TokensScreen(
                                     Text("Aktiver Tier")
                                 }
                             } else {
-                                OutlinedButton(onClick = { onSelectTier(tier.id) }, modifier = Modifier.weight(1f)) {
-                                    Text("Aktivieren")
-                                }
-                                Button(onClick = { onSelectTier(tier.id) }, modifier = Modifier.weight(1f)) {
-                                    Text("Upgrade")
+                                OutlinedButton(onClick = { onSelectTier(tier.id) }, modifier = Modifier.fillMaxWidth()) {
+                                    Text("Als aktiven Tier setzen")
                                 }
                             }
                         }
