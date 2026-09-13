@@ -20,7 +20,6 @@ data class UiState(
     val creators: List<CreatorProfile> = emptyList(),
     val feed: List<ContentPost> = emptyList(),
     val subscriptions: List<SubscriptionTier> = emptyList(),
-    val loading: Boolean = false,
     val error: String? = null,
     val notice: String? = null,
 )
@@ -32,6 +31,9 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
     val state: StateFlow<UiState> = _state.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            store.migrateLegacySettings()
+        }
         viewModelScope.launch {
             store.settings.collect { settings ->
                 _state.update { it.copy(settings = settings) }
@@ -54,7 +56,6 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
                 creators = sampleCreators(),
                 feed = samplePosts(),
                 subscriptions = sampleSubscriptions(),
-                loading = false,
                 error = null,
             )
         }

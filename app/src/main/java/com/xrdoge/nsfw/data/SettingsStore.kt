@@ -23,6 +23,25 @@ class SettingsStore(private val context: Context) {
             prefs[PLATFORM_MODE] = next.platformMode
             prefs[ALLOW_DIRECT_MESSAGES] = next.allowDirectMessages
             prefs[SHOW_EXPLICIT_PREVIEW] = next.showExplicitPreview
+            clearLegacyKeys(prefs)
+        }
+    }
+
+    suspend fun migrateLegacySettings() {
+        context.dataStore.edit { prefs ->
+            if (prefs[CREATOR_ALIAS].isNullOrBlank()) {
+                prefs[CREATOR_ALIAS] = "Creatorin"
+            }
+            if (prefs[PLATFORM_MODE].isNullOrBlank()) {
+                prefs[PLATFORM_MODE] = "Adult Plattform"
+            }
+            if (prefs[ALLOW_DIRECT_MESSAGES] == null) {
+                prefs[ALLOW_DIRECT_MESSAGES] = true
+            }
+            if (prefs[SHOW_EXPLICIT_PREVIEW] == null) {
+                prefs[SHOW_EXPLICIT_PREVIEW] = false
+            }
+            clearLegacyKeys(prefs)
         }
     }
 
@@ -40,5 +59,16 @@ class SettingsStore(private val context: Context) {
         val PLATFORM_MODE = stringPreferencesKey("platform_mode")
         val ALLOW_DIRECT_MESSAGES = booleanPreferencesKey("allow_direct_messages")
         val SHOW_EXPLICIT_PREVIEW = booleanPreferencesKey("show_explicit_preview")
+        val LEGACY_RPC = stringPreferencesKey("rpc_url")
+        val LEGACY_ACCOUNT = stringPreferencesKey("saved_account")
+        val LEGACY_CURRENCY = stringPreferencesKey("token_currency")
+        val LEGACY_ISSUER = stringPreferencesKey("token_issuer")
+    }
+
+    private fun clearLegacyKeys(prefs: androidx.datastore.preferences.core.MutablePreferences) {
+        prefs.remove(LEGACY_RPC)
+        prefs.remove(LEGACY_ACCOUNT)
+        prefs.remove(LEGACY_CURRENCY)
+        prefs.remove(LEGACY_ISSUER)
     }
 }
