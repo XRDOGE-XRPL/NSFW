@@ -99,7 +99,11 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun registerCreatorInterest(creatorId: String) {
-        val creatorName = _state.value.creators.firstOrNull { it.id == creatorId }?.name ?: creatorId
+        val creatorName = _state.value.creators.firstOrNull { it.id == creatorId }?.name
+        if (creatorName == null) {
+            _state.update { it.copy(error = "Creatorin nicht gefunden") }
+            return
+        }
         _state.update { it.copy(notice = "Kontaktanfrage an $creatorName vorbereitet") }
     }
 

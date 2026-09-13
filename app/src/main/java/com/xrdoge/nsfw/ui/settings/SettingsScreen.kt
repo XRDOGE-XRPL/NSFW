@@ -2,7 +2,6 @@ package com.xrdoge.nsfw.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
@@ -19,9 +19,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.xrdoge.nsfw.BuildConfig
 import com.xrdoge.nsfw.ui.UiState
@@ -69,34 +68,16 @@ fun SettingsScreen(
 
         NeonCard {
             SectionLabel("Policy")
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .toggleable(
-                        value = allowDm,
-                        role = Role.Switch,
-                        onValueChange = { allowDm = it },
-                    ),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text("Direktnachrichten erlauben")
-                Switch(checked = allowDm, onCheckedChange = null)
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .toggleable(
-                        value = showPreview,
-                        role = Role.Switch,
-                        onValueChange = { showPreview = it },
-                    ),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text("Explizite Preview anzeigen")
-                Switch(checked = showPreview, onCheckedChange = null)
-            }
+            ToggleSettingRow(
+                label = "Direktnachrichten erlauben",
+                checked = allowDm,
+                onValueChange = { allowDm = it },
+            )
+            ToggleSettingRow(
+                label = "Explizite Preview anzeigen",
+                checked = showPreview,
+                onValueChange = { showPreview = it },
+            )
         }
 
         Button(onClick = { onSave(alias, mode, allowDm, showPreview) }, modifier = Modifier.fillMaxWidth()) {
@@ -109,5 +90,24 @@ fun SettingsScreen(
             Text("Creatorin/Adult/Plattform")
             Text("Kein XRPL-Ledger-Companion aktiv.", color = Mist)
         }
+    }
+
+    @Composable
+    private fun ToggleSettingRow(
+        label: String,
+        checked: Boolean,
+        onValueChange: (Boolean) -> Unit,
+    ) {
+        ListItem(
+            headlineContent = { Text(label) },
+            trailingContent = { Switch(checked = checked, onCheckedChange = null) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .toggleable(
+                    value = checked,
+                    role = Role.Switch,
+                    onValueChange = onValueChange,
+                ),
+        )
     }
 }
