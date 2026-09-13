@@ -175,9 +175,10 @@ class NsfwViewModel(application: Application) : AndroidViewModel(application) {
             _state.update { it.copy(error = "Creatorin nicht gefunden") }
             return
         }
+        val primaryExperience = creator.experiences.firstOrNull() ?: "persönliches Companion"
         val opener = buildString {
             append("Hi ${creator.name}, ")
-            append("ich möchte ein ${creator.experiences.first()} Erlebnis starten")
+            append("ich möchte ein $primaryExperience Erlebnis starten")
             if (creator.voiceIntroAvailable) {
                 append(" und danach eine Voice-Intro freischalten.")
             } else {

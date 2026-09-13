@@ -101,7 +101,7 @@ fun HomeScreen(
                 favoriteCreators.take(3).forEach { creator ->
                     Text(creator.name)
                     Text("${creator.niche} • ${creator.chemistryTags.joinToString(" • ")}", color = Mist)
-                    KeyValue("Nächstes Erlebnis", creator.experiences.first())
+                    KeyValue("Nächstes Erlebnis", creator.experiences.firstOrNull() ?: "Persönliches Companion")
                 }
             }
         }
