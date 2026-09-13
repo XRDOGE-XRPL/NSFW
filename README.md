@@ -7,8 +7,9 @@ Keine XRPL-Funktionen: Die App fokussiert auf Creator-Discovery, Content-Feed un
 ## Features
 
 - Home: Plattform-Dashboard mit Creator-, Post- und Profilstatus
-- Creator Hub: Suche/Kuratierung von Creatorinnen nach Name oder Nische
-- Content: Feed + Subscription-Tiers für Adult-Inhalte
+- Creator Hub: Suche/Kuratierung von Creatorinnen nach Name, Nische oder Experience-Tags
+- Favoriten & DM-Drafts: Creatorinnen merken und Story-/Voice-Intro-Anfragen vorbereiten
+- Content: Feed + auswählbare Subscription-Tiers mit Feature-Vergleich
 - Settings: Creator-Alias, Plattformmodus, DM- und Preview-Policy
 
 ## Stack

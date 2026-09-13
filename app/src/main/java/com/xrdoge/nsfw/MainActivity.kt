@@ -85,17 +85,24 @@ class MainActivity : ComponentActivity() {
                         composable("home") {
                             HomeScreen(
                                 state = state,
+                                favoriteCreators = vm.favoriteCreators(),
+                                activeSubscription = vm.activeSubscription(),
+                                drafts = state.drafts,
                                 onRefresh = vm::refreshPlatform,
                                 onOpenCreatorHub = { nav.navigate("explorer") },
                                 onOpenContentHub = { nav.navigate("tokens") },
+                                onDismissDraft = vm::dismissDraft,
                             )
                         }
                         composable("explorer") {
                             ExplorerScreen(
                                 query = state.query,
                                 creators = vm.filteredCreators(),
+                                favoriteCreatorIds = state.settings.favoriteCreatorIds,
+                                drafts = state.drafts,
                                 onQueryChange = vm::onQueryChange,
                                 onCreatorInterest = vm::registerCreatorInterest,
+                                onToggleFavorite = vm::toggleFavoriteCreator,
                             )
                         }
                         composable("tokens") {
@@ -103,6 +110,7 @@ class MainActivity : ComponentActivity() {
                                 state = state,
                                 feed = vm.filteredPosts(),
                                 creators = vm.filteredCreators(),
+                                onSelectTier = vm::selectSubscriptionTier,
                             )
                         }
                         composable("settings") {
