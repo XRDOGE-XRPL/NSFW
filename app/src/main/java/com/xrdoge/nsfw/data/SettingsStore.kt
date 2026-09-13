@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -23,6 +24,8 @@ class SettingsStore(private val context: Context) {
             prefs[PLATFORM_MODE] = next.platformMode
             prefs[ALLOW_DIRECT_MESSAGES] = next.allowDirectMessages
             prefs[SHOW_EXPLICIT_PREVIEW] = next.showExplicitPreview
+            prefs[FAVORITE_CREATOR_IDS] = next.favoriteCreatorIds
+            prefs[ACTIVE_SUBSCRIPTION_TIER_ID] = next.activeSubscriptionTierId
             clearLegacyKeys(prefs)
         }
     }
@@ -42,6 +45,12 @@ class SettingsStore(private val context: Context) {
             if (prefs[SHOW_EXPLICIT_PREVIEW] == null) {
                 prefs[SHOW_EXPLICIT_PREVIEW] = defaults.showExplicitPreview
             }
+            if (prefs[FAVORITE_CREATOR_IDS] == null) {
+                prefs[FAVORITE_CREATOR_IDS] = defaults.favoriteCreatorIds
+            }
+            if (prefs[ACTIVE_SUBSCRIPTION_TIER_ID].isNullOrBlank()) {
+                prefs[ACTIVE_SUBSCRIPTION_TIER_ID] = defaults.activeSubscriptionTierId
+            }
             clearLegacyKeys(prefs)
         }
     }
@@ -52,6 +61,8 @@ class SettingsStore(private val context: Context) {
             platformMode = this[PLATFORM_MODE].orEmpty().ifBlank { "Adult Plattform" },
             allowDirectMessages = this[ALLOW_DIRECT_MESSAGES] ?: true,
             showExplicitPreview = this[SHOW_EXPLICIT_PREVIEW] ?: false,
+            favoriteCreatorIds = this[FAVORITE_CREATOR_IDS] ?: emptySet(),
+            activeSubscriptionTierId = this[ACTIVE_SUBSCRIPTION_TIER_ID].orEmpty().ifBlank { "insider" },
         )
     }
 
@@ -60,6 +71,8 @@ class SettingsStore(private val context: Context) {
         val PLATFORM_MODE = stringPreferencesKey("platform_mode")
         val ALLOW_DIRECT_MESSAGES = booleanPreferencesKey("allow_direct_messages")
         val SHOW_EXPLICIT_PREVIEW = booleanPreferencesKey("show_explicit_preview")
+        val FAVORITE_CREATOR_IDS = stringSetPreferencesKey("favorite_creator_ids")
+        val ACTIVE_SUBSCRIPTION_TIER_ID = stringPreferencesKey("active_subscription_tier_id")
         val LEGACY_RPC = stringPreferencesKey("rpc_url")
         val LEGACY_ACCOUNT = stringPreferencesKey("saved_account")
         val LEGACY_CURRENCY = stringPreferencesKey("token_currency")

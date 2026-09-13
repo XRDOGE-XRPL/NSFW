@@ -80,6 +80,15 @@ fun SettingsScreen(
             )
         }
 
+        NeonCard {
+            SectionLabel("Companion Setup")
+            Text("Favoriten: ${state.settings.favoriteCreatorIds.size}")
+            Text(
+                "Aktiver Tier: ${state.subscriptions.firstOrNull { it.id == state.settings.activeSubscriptionTierId }?.name ?: "Kein Tier"}",
+            )
+            Text("DM-Drafts: ${state.drafts.size}", color = Mist)
+        }
+
         Button(onClick = { onSave(alias, mode, allowDm, showPreview) }, modifier = Modifier.fillMaxWidth()) {
             Text("Speichern")
         }
@@ -91,23 +100,23 @@ fun SettingsScreen(
             Text("Kein XRPL-Ledger-Companion aktiv.", color = Mist)
         }
     }
+}
 
-    @Composable
-    private fun ToggleSettingRow(
-        label: String,
-        checked: Boolean,
-        onValueChange: (Boolean) -> Unit,
-    ) {
-        ListItem(
-            headlineContent = { Text(label) },
-            trailingContent = { Switch(checked = checked, onCheckedChange = null) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .toggleable(
-                    value = checked,
-                    role = Role.Switch,
-                    onValueChange = onValueChange,
-                ),
-        )
-    }
+@Composable
+private fun ToggleSettingRow(
+    label: String,
+    checked: Boolean,
+    onValueChange: (Boolean) -> Unit,
+) {
+    ListItem(
+        headlineContent = { Text(label) },
+        trailingContent = { Switch(checked = checked, onCheckedChange = null) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .toggleable(
+                value = checked,
+                role = Role.Switch,
+                onValueChange = onValueChange,
+            ),
+    )
 }
