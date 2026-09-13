@@ -57,8 +57,8 @@ class MainActivity : ComponentActivity() {
 
                 val tabs = listOf(
                     Tab("home", "Home", Icons.Outlined.Home),
-                    Tab("explorer", "Explorer", Icons.Outlined.Explore),
-                    Tab("tokens", "Tokens", Icons.Outlined.AccountBalanceWallet),
+                    Tab("explorer", "Creator", Icons.Outlined.Explore),
+                    Tab("tokens", "Content", Icons.Outlined.AccountBalanceWallet),
                     Tab("settings", "Settings", Icons.Outlined.Settings),
                 )
 
@@ -85,38 +85,31 @@ class MainActivity : ComponentActivity() {
                         composable("home") {
                             HomeScreen(
                                 state = state,
-                                onRefresh = vm::refreshNetwork,
-                                onOpenExplorer = { nav.navigate("explorer") },
-                                onLookupSaved = {
-                                    val saved = state.settings.savedAccount
-                                    if (saved.isNotBlank()) {
-                                        vm.onQueryChange(saved)
-                                        vm.lookup(saved)
-                                    }
-                                },
+                                onRefresh = vm::refreshPlatform,
+                                onOpenCreatorHub = { nav.navigate("explorer") },
+                                onOpenContentHub = { nav.navigate("tokens") },
                             )
                         }
                         composable("explorer") {
                             ExplorerScreen(
                                 state = state,
+                                creators = vm.filteredCreators(),
                                 onQueryChange = vm::onQueryChange,
-                                onLookup = { vm.lookup() },
-                                onSave = vm::saveCurrentAccount,
+                                onCreatorInterest = vm::registerCreatorInterest,
                             )
                         }
                         composable("tokens") {
-                            TokensScreen(state = state, featured = vm.matchingTokenLines())
+                            TokensScreen(
+                                state = state,
+                                feed = vm.filteredPosts(),
+                                creators = vm.filteredCreators(),
+                            )
                         }
                         composable("settings") {
                             SettingsScreen(
                                 state = state,
-                                onSave = { rpc, account, currency, issuer ->
-                                    vm.updateSettings(
-                                        rpcUrl = rpc,
-                                        savedAccount = account,
-                                        tokenCurrency = currency,
-                                        tokenIssuer = issuer,
-                                    )
+                                onSave = { alias, mode, allowDm, showPreview ->
+                                    vm.updateSettings(alias, mode, allowDm, showPreview)
                                 },
                             )
                         }
