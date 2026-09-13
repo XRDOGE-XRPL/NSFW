@@ -6,15 +6,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,25 +20,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.xrdoge.nsfw.BuildConfig
-import com.xrdoge.nsfw.data.AppSettings
 import com.xrdoge.nsfw.ui.UiState
 import com.xrdoge.nsfw.ui.components.NeonCard
 import com.xrdoge.nsfw.ui.components.SectionLabel
 import com.xrdoge.nsfw.ui.theme.Mist
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     state: UiState,
-    onSave: (rpcUrl: String, account: String, currency: String, issuer: String) -> Unit,
+    onSave: (creatorAlias: String, platformMode: String, allowDm: Boolean, showPreview: Boolean) -> Unit,
 ) {
-    var rpc by remember(state.settings.rpcUrl) { mutableStateOf(state.settings.rpcUrl) }
-    var account by remember(state.settings.savedAccount) { mutableStateOf(state.settings.savedAccount) }
-    var currency by remember(state.settings.tokenCurrency) { mutableStateOf(state.settings.tokenCurrency) }
-    var issuer by remember(state.settings.tokenIssuer) { mutableStateOf(state.settings.tokenIssuer) }
-    var expanded by remember { mutableStateOf(false) }
+    var alias by remember(state.settings.creatorAlias) { mutableStateOf(state.settings.creatorAlias) }
+    var mode by remember(state.settings.platformMode) { mutableStateOf(state.settings.platformMode) }
+    var allowDm by remember(state.settings.allowDirectMessages) { mutableStateOf(state.settings.allowDirectMessages) }
+    var showPreview by remember(state.settings.showExplicitPreview) { mutableStateOf(state.settings.showExplicitPreview) }
 
     Column(
         modifier = Modifier
@@ -50,69 +46,68 @@ fun SettingsScreen(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Text("Einstellungen", style = MaterialTheme.typography.headlineMedium)
-        Text("Öffentliche Nodes, kein Seed, kein Signing.", color = Mist)
+        Text("Plattform-Profile und NSFW-Policy-Optionen verwalten.", color = Mist)
 
         NeonCard {
-            SectionLabel("XRPL Node")
-            ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
-                OutlinedTextField(
-                    value = rpc,
-                    onValueChange = { rpc = it },
-                    modifier = Modifier
-                        .menuAnchor(MenuAnchorType.PrimaryNotEditable)
-                        .fillMaxWidth(),
-                    label = { Text("RPC URL") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-                    readOnly = true,
-                )
-                ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    AppSettings.RPC_OPTIONS.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                rpc = option
-                                expanded = false
-                            },
-                        )
-                    }
-                }
-            }
-        }
-
-        NeonCard {
-            SectionLabel("Konto & Token")
+            SectionLabel("Profil")
             OutlinedTextField(
-                value = account,
-                onValueChange = { account = it },
+                value = alias,
+                onValueChange = { alias = it },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Standard-Konto") },
+                label = { Text("Creator Alias") },
                 singleLine = true,
             )
             OutlinedTextField(
-                value = currency,
-                onValueChange = { currency = it },
+                value = mode,
+                onValueChange = { mode = it },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Token-Währung") },
-                singleLine = true,
-            )
-            OutlinedTextField(
-                value = issuer,
-                onValueChange = { issuer = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Token-Issuer") },
+                label = { Text("Plattformmodus") },
                 singleLine = true,
             )
         }
 
-        Button(onClick = { onSave(rpc, account, currency, issuer) }, modifier = Modifier.fillMaxWidth()) {
+        NeonCard {
+            SectionLabel("Policy")
+            ToggleSettingRow(
+                label = "Direktnachrichten erlauben",
+                checked = allowDm,
+                onValueChange = { allowDm = it },
+            )
+            ToggleSettingRow(
+                label = "Explizite Preview anzeigen",
+                checked = showPreview,
+                onValueChange = { showPreview = it },
+            )
+        }
+
+        Button(onClick = { onSave(alias, mode, allowDm, showPreview) }, modifier = Modifier.fillMaxWidth()) {
             Text("Speichern")
         }
 
         NeonCard {
             SectionLabel("About")
             Text("NSFW ${BuildConfig.VERSION_NAME} (${BuildConfig.BUILD_TYPE})")
-            Text("XRDOGE-XRPL · Read-only Ledger Companion")
-            Text("Diese App speichert keine Secrets und signiert keine Transaktionen.", color = Mist)
+            Text("Creatorin/Adult/Plattform")
+            Text("Kein XRPL-Ledger-Companion aktiv.", color = Mist)
         }
+    }
+
+    @Composable
+    private fun ToggleSettingRow(
+        label: String,
+        checked: Boolean,
+        onValueChange: (Boolean) -> Unit,
+    ) {
+        ListItem(
+            headlineContent = { Text(label) },
+            trailingContent = { Switch(checked = checked, onCheckedChange = null) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .toggleable(
+                    value = checked,
+                    role = Role.Switch,
+                    onValueChange = onValueChange,
+                ),
+        )
     }
 }

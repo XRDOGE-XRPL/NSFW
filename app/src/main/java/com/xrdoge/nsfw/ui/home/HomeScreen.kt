@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,18 +21,13 @@ import com.xrdoge.nsfw.ui.components.NeonCard
 import com.xrdoge.nsfw.ui.components.SectionLabel
 import com.xrdoge.nsfw.ui.components.StatChip
 import com.xrdoge.nsfw.ui.theme.Mist
-import com.xrdoge.nsfw.ui.theme.Success
-import com.xrdoge.nsfw.util.CurrencyCodec
-import com.xrdoge.nsfw.util.Drops
-import com.xrdoge.nsfw.util.XrplAddress
-import java.util.Locale
 
 @Composable
 fun HomeScreen(
     state: UiState,
     onRefresh: () -> Unit,
-    onOpenExplorer: () -> Unit,
-    onLookupSaved: () -> Unit,
+    onOpenCreatorHub: () -> Unit,
+    onOpenContentHub: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -43,79 +37,40 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         GradientTitle("NSFW")
-        Text("XRPL Companion für das XRDOGE-Ökosystem.", color = Mist)
+        Text("Creatorinnen-zentrierte Adult-Plattform ohne XRPL-Funktionen.", color = Mist)
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-            val net = state.network
             StatChip(
-                label = "Netzwerk",
-                value = net?.serverState?.replaceFirstChar { it.titlecase(Locale.ROOT) } ?: "…",
+                label = "Creator",
+                value = state.creators.size.toString(),
                 modifier = Modifier.weight(1f),
             )
             StatChip(
-                label = "Ledger",
-                value = net?.ledgerIndex?.toString() ?: "…",
-                modifier = Modifier.weight(1f),
-            )
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-            StatChip(
-                label = "XRP/USD",
-                value = state.price?.let { Drops.formatFiat(it.usd) } ?: "—",
-                modifier = Modifier.weight(1f),
-            )
-            StatChip(
-                label = "XRP/EUR",
-                value = state.price?.let { Drops.formatFiat(it.eur, "EUR") } ?: "—",
+                label = "Posts",
+                value = state.feed.size.toString(),
                 modifier = Modifier.weight(1f),
             )
         }
 
         NeonCard {
-            SectionLabel("Token")
-            Text("${state.settings.tokenCurrency} on XRPL")
-            KeyValue(
-                "Währung",
-                CurrencyCodec.display(CurrencyCodec.toXrplCode(state.settings.tokenCurrency)),
-            )
-            KeyValue(
-                "Issuer",
-                if (state.settings.tokenIssuer.isBlank()) {
-                    "in Einstellungen setzen"
-                } else {
-                    XrplAddress.shorten(state.settings.tokenIssuer)
-                },
-            )
-            val matches = state.lines.filter { line ->
-                CurrencyCodec.display(line.currency).equals(state.settings.tokenCurrency, true)
-            }
-            if (matches.isNotEmpty()) {
-                KeyValue("Balance", matches.first().balance)
-            }
+            SectionLabel("Plattform")
+            KeyValue("Modus", state.settings.platformMode)
+            KeyValue("Profil", state.settings.creatorAlias)
+            KeyValue("DM", if (state.settings.allowDirectMessages) "Aktiv" else "Aus")
+            KeyValue("Preview", if (state.settings.showExplicitPreview) "Sichtbar" else "Verdeckt")
         }
 
         NeonCard {
-            SectionLabel("Gespeichertes Konto")
-            val saved = state.settings.savedAccount
-            if (saved.isBlank()) {
-                Text("Noch kein Konto gespeichert. Lookup im Explorer, dann speichern.", color = Mist)
-            } else {
-                Text(XrplAddress.shorten(saved, 10, 8))
-                state.account?.takeIf { it.address == saved }?.let { account ->
-                    Text("${Drops.formatXrp(account.balanceDrops)} XRP", color = Success)
-                }
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = onLookupSaved, enabled = saved.isNotBlank()) { Text("Laden") }
-                OutlinedButton(onClick = onOpenExplorer) { Text("Explorer") }
+            SectionLabel("Schnellzugriff")
+            Text("Creatorinnen verwalten, Content kuratieren und Subscriptions steuern.")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                Button(onClick = onOpenCreatorHub, modifier = Modifier.weight(1f)) { Text("Creator Hub") }
+                OutlinedButton(onClick = onOpenContentHub, modifier = Modifier.weight(1f)) { Text("Content") }
             }
         }
 
-        if (state.loadingNetwork) {
-            CircularProgressIndicator()
-        }
         OutlinedButton(onClick = onRefresh, modifier = Modifier.fillMaxWidth()) {
-            Text("Netzwerk aktualisieren")
+            Text("Plattformdaten aktualisieren")
         }
     }
 }

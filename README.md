@@ -1,22 +1,21 @@
-# NSFW — XRPL Companion (Android)
+# NSFW — Creatorin/Adult/Plattform (Android)
 
-Native Android-App für das [XRDOGE-XRPL](https://github.com/XRDOGE-XRPL)-Ökosystem. Read-only Ledger-Companion: Netzwerkstatus, Konto-Lookup, Trustlines und Token-Filter.
+Native Android-App für eine NSFW Creatorinnen-Plattform.
 
-Kein Wallet, kein Signing, keine Seeds. Es werden nur öffentliche XRPL-RPC-Daten gelesen.
+Keine XRPL-Funktionen: Die App fokussiert auf Creator-Discovery, Content-Feed und Subscription-Tiers.
 
 ## Features
 
-- Home: XRPL-Node-Status, Ledger-Index, XRP-Preis (USD/EUR)
-- Explorer: Classic-Address (`r…`) Lookup, XRP-Balance, Sequence, letzte Transaktionen
-- Tokens: Trustlines inkl. NSFW-Währungsfilter (Issuer in den Einstellungen)
-- Settings: öffentlicher Node, gespeichertes Konto, Token-Code/Issuer
+- Home: Plattform-Dashboard mit Creator-, Post- und Profilstatus
+- Creator Hub: Suche/Kuratierung von Creatorinnen nach Name oder Nische
+- Content: Feed + Subscription-Tiers für Adult-Inhalte
+- Settings: Creator-Alias, Plattformmodus, DM- und Preview-Policy
 
 ## Stack
 
 - Kotlin, Jetpack Compose, Material 3
 - minSdk 26 / targetSdk 35
-- OkHttp → `xrplcluster.com` (oder Ripple `s1`/`s2`)
-- DataStore für Einstellungen
+- DataStore für lokale Plattform-Einstellungen
 
 ## Bauen
 
@@ -40,16 +39,7 @@ Release:
 ./gradlew assembleRelease
 ```
 
-## Konfiguration
-
-In der App unter **Settings**:
-
-1. RPC-Node wählen
-2. Optional Standard-Konto (Classic Address) speichern
-3. Token-Währung (z. B. `NSFW`) und Issuer setzen
-
 ## Sicherheit
 
 - Keine Private Keys, Mnemonics oder Seeds
-- Nur HTTPS zu öffentlichen APIs
-- Lookups validieren Classic Addresses (`r` + Base58 ohne `0OIl`)
+- Keine Blockchain-/Wallet-Funktionen in der App aktiv
