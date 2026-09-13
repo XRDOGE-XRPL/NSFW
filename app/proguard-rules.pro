@@ -1,0 +1,3 @@
+-keepattributes *Annotation*, InnerClasses, Signature, Exception
+-dontwarn okhttp3.**
+-dontwarn okio.**
