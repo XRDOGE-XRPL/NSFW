@@ -19,5 +19,14 @@ class DropsAndCurrencyTest {
         assertEquals(40, hex.length)
         assertEquals("NSFW", CurrencyCodec.display(hex))
         assertEquals("USD", CurrencyCodec.display("USD"))
+        assertEquals("USD", CurrencyCodec.display("usd"))
+    }
+
+    @Test
+    fun formatsFiatWithNormalizedCurrencyCodes() {
+        val eur = Drops.formatFiat(1.23, "eur")
+        val usd = Drops.formatFiat(1.23, "usd")
+        assertEquals("1,23 €", eur.replace("\u00A0", " "))
+        assertEquals("$1.23", usd.replace("\u00A0", " "))
     }
 }

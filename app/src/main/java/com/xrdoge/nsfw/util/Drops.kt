@@ -20,8 +20,9 @@ object Drops {
     }
 
     fun formatFiat(amount: Double, currency: String = "USD"): String {
+        val normalizedCurrency = currency.trim().uppercase(Locale.US)
         val format = NumberFormat.getCurrencyInstance(Locale.US)
-        if (currency == "EUR") {
+        if (normalizedCurrency == "EUR") {
             return NumberFormat.getCurrencyInstance(Locale.GERMANY).format(amount)
         }
         return format.format(amount)
